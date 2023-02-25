@@ -69,7 +69,6 @@ string* tableClass::operator[](int i) {
 
 
 tableClass::tableClass() {
-
 }
 
 tableClass::tableClass(int rows, int cols) {
@@ -87,6 +86,18 @@ tableClass::tableClass(int rows, int cols) {
   
   noRows = rows;
   noCols = cols;
+}
+
+
+// Reads the csv file and stores the rows in the myTable array
+void tableClass::readCSV(string filename) {
+  fstream fs;
+  fs.open(filename, fstream::in | fstream::out);
+  for (int i = 0; i < noRows; i++) {
+    for (int j = 0; j < noCols; j++) {
+      fs >> myTable[i][j];
+    }
+  }
 }
 int main()
 {
