@@ -52,8 +52,42 @@ public:
 	~tableClass();
 };
 
+// Return the number of rows
+int tableClass::getNumberRows() {
+  return noRows;
+}
+
+// Return the number of cols
+int tableClass::getNumberCols() {
+  return noCols;
+}
+
+// Returns the ith row
+string* tableClass::operator[](int i) {
+  return myTable[i];
+}
 
 
+tableClass::tableClass() {
+
+}
+
+tableClass::tableClass(int rows, int cols) {
+  
+  //Initialize myTable rows
+  myTable = new string*[rows];
+
+  //Initialize myTable columns
+  for (int i = 0; i < rows; i++) {
+    myTable[i] = new string[cols];
+  }
+
+  DTarray = new string[cols];
+
+  
+  noRows = rows;
+  noCols = cols;
+}
 int main()
 {
 	int numRows, numCols;
