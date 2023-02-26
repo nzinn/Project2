@@ -8,6 +8,9 @@
 
 using namespace std;
 
+
+string* parseLine(string line, int numEntries);
+
 class tableClass {
 protected:
   string **myTable; // 2D string array to store all values (strings and numbers)
@@ -140,9 +143,30 @@ void tableClass::readCSV(string filename) {
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
       fs >> myTable[i][j];
+string* parseLine(string line, int numEntries) {
+
+  // Current index of the string
+  int curIdx = 0;
+  
+  string* entries = new string[numEntries];
+  
+  for (int i = 0; i < numEntries; i++) {
+
+    string entry = "";
+
+    // Add each character to entry until you reach a comma
+    while (curIdx < line.length() && line.at(curIdx) != ',' && line.at(curIdx) != '\r') {
+
+      entry += line.at(curIdx);
+      curIdx++;
     }
+    entries[i] = entry;
+    curIdx++;
   }
+
+  return entries;
 }
+
 
 int main() {
   int numRows, numCols;
