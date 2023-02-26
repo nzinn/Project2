@@ -109,6 +109,29 @@ void tableClass::display() {
   }
 }
 
+void tableClass::sortTable() {
+
+  for (int i = 1; i < numRows; i++) {
+
+    // Get the row
+    string* first = myTable[i];
+    for (int j = i - 1; j >= 0; j--) {
+
+      // Get the row above
+      string* second = myTable[j];
+
+      // If the column of the first row is greater than the second, we've found the right spot
+      if (first[0].compare(second[0]) < 0) {
+	myTable[j + 1] = first;
+      } else {
+	// Move the row above down one
+	myTable[j + 1] = second;
+      }
+    }
+  }
+}
+
+
 // Reads the csv file and stores the rows in the myTable array
 void tableClass::readCSV(string filename) {
   fstream fs;
