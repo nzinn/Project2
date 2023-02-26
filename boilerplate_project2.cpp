@@ -93,16 +93,16 @@ void tableClass::display() {
 
   // Print data types
 
-  for (int i = 0; i < numCols; i++) {
+  // for (int i = 0; i < numCols; i++) {
 
-    // Add a space between entries unless it's the last one
-    cout << DTarray[i] << (i == numCols ? " " : "");
-  }
+  //   // Add a space between entries unless it's the last one
+  //   cout << DTarray[i] << (i == numCols ? "" : " ");
+  // }
 
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
       // Add a space between entries unless it's the last one
-      cout << myTable[i][j] << (j == numCols ? " " : "");
+      cout << myTable[i][j] << (j == numCols ? "" : " ");
     }
 
     // Print a newline after each row unless it's the last
@@ -140,9 +140,19 @@ void tableClass::readCSV(string filename) {
   fstream fs;
   fs.open(filename, fstream::in | fstream::out);
 
+
+  string line;
   for (int i = 0; i < numRows; i++) {
-    for (int j = 0; j < numCols; j++) {
-      fs >> myTable[i][j];
+
+    getline(fs , line, '\n');
+
+    myTable[i] = parseLine(line, numCols);
+    
+  }
+
+  fs.close();
+}
+
 string* parseLine(string line, int numEntries) {
 
   // Current index of the string
@@ -178,10 +188,20 @@ int main() {
   cout << "NumCols: " << numCols << endl;
   cout << "FileName: " << fileName << endl;
 
-  tableClass *d = new tableClass(numRows, numCols);
+  tableClass *table = new tableClass(numRows, numCols);
 
   // TODO: read the file input name and call readCSV()
+  
+  table->readCSV(fileName);
 
+
+  table->display();
+
+  table->sortTable();
+
+
+  cout << "Sorted: " << endl;
+  table->display();
   // TODO: read the data types and store in DTarray of d
 
   // TODO: start reading the options till the end of the file
