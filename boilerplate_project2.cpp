@@ -89,7 +89,6 @@ tableClass::tableClass(int rows, int cols) {
   numCols = cols;
 }
 
-
 // Constructor that takes an already made table
 tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
 
@@ -106,7 +105,6 @@ tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
   numRows = rows;
   numCols = cols;
 
-
   // Copy the contents of table into myTable
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -117,7 +115,6 @@ tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
   for (int i = 0; i < cols; i++) {
     DTarray[i] = DTs[i];
   }
-  
 }
 // displays the table
 void tableClass::display() {
@@ -148,7 +145,7 @@ double tableClass::findMin(int colNumber) {
   double min = stod(myTable[0][colNumber]);
   for (int i = 1; i < numRows; i++) {
 
-    double toTest = stod(myTable[i][colNumber]); 
+    double toTest = stod(myTable[i][colNumber]);
     if (toTest < min) {
       min = toTest;
     }
@@ -222,19 +219,18 @@ string *parseLine(string line, int numEntries) {
   return entries;
 }
 
-
 string *tableClass::searchRecord(string str) {
 
   // For encapsulation, copy the row
   string *rowCopy = new string[numCols];
-  
+
   for (int i = 0; i < numRows; i++) {
 
     if (myTable[i][0].compare(str) == 0) {
 
       // Copy the row
       for (int j = 0; j < numCols; j++)
-	rowCopy[j] = myTable[i][j];
+        rowCopy[j] = myTable[i][j];
 
       break;
     }
@@ -242,19 +238,17 @@ string *tableClass::searchRecord(string str) {
   return rowCopy;
 }
 
-
 void tableClass::searchValue(string str) {
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
 
       // Print the row and columnt index if the current position contains str
       if (myTable[i][j].compare(str) == 0) {
-	cout << str << " " << i << " " << j << endl;
+        cout << str << " " << i << " " << j << endl;
       }
     }
   }
 }
-
 
 tableClass::~tableClass() {
 
@@ -266,24 +260,53 @@ tableClass::~tableClass() {
   delete[] DTarray;
 }
 
-
-
 tableClass *tableClass::getRows(int rowTop, int rowBottom) {
 
-  string** rows = new string*[numRows - rowBottom - rowTop];
+  string **rows = new string *[numRows - rowBottom - rowTop + 1];
 
-  for (int i = 0; i < numCols; i++) {
-    rows[i] = new string[numCols];
+  for (int i = 0; i < rowBottom - rowTop + 1; i++) {
+    rows[i] = myTable[i + rowTop];
   }
 
-  // Get rows
-  for (int i = rowTop; i <= rowBottom; i++) {
-    rows[i] = myTable[i];
-  }
-
-  return new tableClass(rows, DTarray, rowBottom - rowTop + 1, numCols); 
+  return new tableClass(rows, DTarray, rowBottom - rowTop + 1, numCols);
 }
-    
+
+tableClass *tableClass::getColumns(int colLeft, int colRight) {
+
+  
+  string **rows = new string*[numRows];
+
+  string *DTs = new string[colRight - colLeft + 1];
+
+
+  
+  for (int i = 0; i < numRows; i++) {
+    rows[i] = new string[colRight - colLeft + 1];
+
+    // Get columns
+    for (int j = 0; j < colRight - colLeft + 1; j++) {
+      rows[i][j] = myTable[i][j + colLeft];
+    }
+  }
+
+  for (int i = 0; i < colRight - colLeft + 1; i++) {
+    DTs[i] = DTarray[i + colLeft];
+  }
+
+  return new tableClass(rows, DTs, numRows, colRight - colLeft + 1);
+}
+
+tableClass *tableClass::getRowsCols(int colLeft, int colRight, int rowTop, int rowBottom) {
+
+  // First, get only the rows
+  tableClass *temp = getRows(rowTop, rowBottom);
+  // Next, narrow to the columns that we want
+  tableClass *toReturn = temp->getColumns(colLeft, colRight);
+
+  delete temp;
+  return toReturn;
+}
+
 int main() {
   int numRows, numCols;
   string fileName;
