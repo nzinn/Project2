@@ -225,6 +225,18 @@ string *tableClass::searchRecord(string str) {
   return rowCopy;
 }
 
+
+void tableClass::searchValue(string str) {
+  for (int i = 0; i < numRows; i++) {
+    for (int j = 0; j < numCols; j++) {
+
+      // Print the row and columnt index if the current position contains str
+      if (myTable[i][j].compare(str) == 0) {
+	cout << str << " " << i << " " << j << endl;
+      }
+    }
+  }
+}
 int main() {
   int numRows, numCols;
   string fileName;
