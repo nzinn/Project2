@@ -21,6 +21,7 @@ public:
   // Constructors
   tableClass();
   tableClass(int rows, int cols);
+  tableClass(string **table, string *DTs, int rows, int cols);
 
   // Overload the [] operator to access a row in myTable
   string *operator[](int i);
@@ -88,6 +89,36 @@ tableClass::tableClass(int rows, int cols) {
   numCols = cols;
 }
 
+
+// Constructor that takes an already made table
+tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
+
+  // Initialize myTable rows
+  myTable = new string *[rows];
+
+  // Initialize myTable columns
+  for (int i = 0; i < rows; i++) {
+    myTable[i] = new string[cols];
+  }
+
+  DTarray = new string[cols];
+
+  numRows = rows;
+  numCols = cols;
+
+
+  // Copy the contents of table into myTable
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      myTable[i][j] = table[i][j];
+    }
+  }
+
+  for (int i = 0; i < cols; i++) {
+    DTarray[i] = DTs[i];
+  }
+  
+}
 // displays the table
 void tableClass::display() {
 
