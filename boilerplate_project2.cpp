@@ -8,8 +8,7 @@
 
 using namespace std;
 
-
-string* parseLine(string line, int numEntries);
+string *parseLine(string line, int numEntries);
 
 class tableClass {
 protected:
@@ -44,10 +43,11 @@ public:
   // Getters
   int getNumberRows(); // returns the number of rows
   int getNumberCols(); // returns the number of columns
+
   tableClass *
   getColumns(int colLeft,
              int colRight); // returns a tableClass with a set of columns from
-                            // colLeft to colRight indices
+  // colLeft to colRight indices
   tableClass *getRows(int rowTop,
                       int rowBottom); // returns a tableClass with a set of rows
                                       // from rowTop to rowBottom indices
@@ -148,56 +148,55 @@ void tableClass::sortTable() {
   for (int i = 1; i < numRows; i++) {
 
     // Get the ith row, starting from the second row
-    string* first = myTable[i];
+    string *first = myTable[i];
     for (int j = i - 1; j >= -1; j--) {
 
       // Get the row above
-      string* second = myTable[j];
+      string *second = myTable[j];
 
-      // If the first column of the first row is greater than the first column of the second, we've found the right spot
+      // If the first column of the first row is greater than the first column
+      // of the second, we've found the right spot
       if (j == -1 || first[0].compare(second[0]) > 0) {
-	myTable[j + 1] = first;
-	break;
+        myTable[j + 1] = first;
+        break;
       } else {
-	// Move the row above down one
-	myTable[j + 1] = second;
+        // Move the row above down one
+        myTable[j + 1] = second;
       }
     }
   }
 }
-
 
 // Reads the csv file and stores the rows in the myTable array
 void tableClass::readCSV(string filename) {
   fstream fs;
   fs.open(filename, fstream::in | fstream::out);
 
-
   string line;
   for (int i = 0; i < numRows; i++) {
 
-    getline(fs , line, '\n');
+    getline(fs, line, '\n');
 
     myTable[i] = parseLine(line, numCols);
-    
   }
 
   fs.close();
 }
 
-string* parseLine(string line, int numEntries) {
+string *parseLine(string line, int numEntries) {
 
   // Current index of the string
   int curIdx = 0;
-  
-  string* entries = new string[numEntries];
-  
+
+  string *entries = new string[numEntries];
+
   for (int i = 0; i < numEntries; i++) {
 
     string entry = "";
 
     // Add each character to entry until you reach a comma
-    while (curIdx < line.length() && line.at(curIdx) != ',' && line.at(curIdx) != '\r') {
+    while (curIdx < line.length() && line.at(curIdx) != ',' &&
+           line.at(curIdx) != '\r') {
 
       entry += line.at(curIdx);
       curIdx++;
@@ -238,20 +237,20 @@ int main() {
 
   tableClass *table = new tableClass(numRows, numCols);
 
-  // TODO: read the file input name and call readCSV()
-  
-  table->readCSV(fileName);
+  // read the file input name and call readCSV()
 
+  table->readCSV(fileName);
 
   table->display();
 
   table->sortTable();
 
-
   cout << "Sorted: " << endl;
   table->display();
   // TODO: read the data types and store in DTarray of d
 
+  for (int i = 0; i < numCols; i++) {
+  }
   // TODO: start reading the options till the end of the file
 
   return 0;
