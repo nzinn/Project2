@@ -145,7 +145,7 @@ void tableClass::display() {
 
 double tableClass::findMin(int colNumber) {
 
-  double min = myTable[0][colNumber];
+  double min = stod(myTable[0][colNumber]);
   for (int i = 1; i < numRows; i++) {
 
     double toTest = stod(myTable[i][colNumber]); 
@@ -153,7 +153,8 @@ double tableClass::findMin(int colNumber) {
       min = toTest;
     }
   }
-  
+
+  return min;
 }
 
 void tableClass::sortTable() {
@@ -264,6 +265,25 @@ tableClass::~tableClass() {
   delete[] myTable;
   delete[] DTarray;
 }
+
+
+
+tableClass *tableClass::getRows(int rowTop, int rowBottom) {
+
+  string** rows = new string*[numRows - rowBottom - rowTop];
+
+  for (int i = 0; i < numCols; i++) {
+    rows[i] = new string[numCols];
+  }
+
+  // Get rows
+  for (int i = rowTop; i <= rowBottom; i++) {
+    rows[i] = myTable[i];
+  }
+
+  return new tableClass(rows, DTarray, rowBottom - rowTop + 1, numCols); 
+}
+    
 int main() {
   int numRows, numCols;
   string fileName;
