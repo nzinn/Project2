@@ -179,6 +179,22 @@ string* parseLine(string line, int numEntries) {
 }
 
 
+string *tableClass::searchRecord(string str) {
+
+  // For encapsulation, copy the row
+  string *rowCopy = new string[numCols];
+  
+  for (int i = 0; i < numRows; i++) {
+
+    if (myTable[i][0].compare(str) == 0) {
+      // Copy the row
+      for (int j = 0; j < numCols; j++)
+	rowCopy[j] = myTable[i][j];
+    }
+  }
+  return rowCopy;
+}
+
 int main() {
   int numRows, numCols;
   string fileName;
