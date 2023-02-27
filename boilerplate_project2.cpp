@@ -44,6 +44,10 @@ public:
   int getNumberRows(); // returns the number of rows
   int getNumberCols(); // returns the number of columns
 
+
+  // Setter
+  void setDTarray(string* array);
+  
   tableClass *
   getColumns(int colLeft,
              int colRight); // returns a tableClass with a set of columns from
@@ -116,6 +120,15 @@ tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
     DTarray[i] = DTs[i];
   }
 }
+
+
+void tableClass::setDTarray(string *array) {
+  for (int i = 0; i < numCols; i++) {
+    DTarray[i] = array[i];
+  }
+}
+
+
 // displays the table
 void tableClass::display() {
 
@@ -323,17 +336,46 @@ int main() {
 
   table->readCSV(fileName);
 
-  table->display();
-
   table->sortTable();
 
-  cout << "Sorted: " << endl;
-  table->display();
-  // TODO: read the data types and store in DTarray of d
+  // read the data types and store in DTarray of d
+
+  string *DTs = new string[numCols];
 
   for (int i = 0; i < numCols; i++) {
+    cin >> DTs[i];
   }
-  // TODO: start reading the options till the end of the file
 
+  table->setDTarray(DTs);
+
+  
+  //  start reading the options till the end of the file
+
+
+  char command;
+  
+  while (cin.peek() != EOF) {
+    cin >> command;
+
+    switch (command) {
+      // Search for row with name 
+    case 'F':
+	string name;
+	cin >> name;
+
+	string *row = table->searchRecord(name);
+
+	cout << "Record found:" << endl;
+
+	for (int i = 0; i < numCols; i++) {
+	  cout << row[i] << (i == numCols ? "" : " ");
+	}
+      
+	cout << endl;
+    }
+    
+  }
+  delete[] DTs;
+  delete table;
   return 0;
 }
