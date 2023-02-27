@@ -253,6 +253,17 @@ void tableClass::searchValue(string str) {
     }
   }
 }
+
+
+tableClass::~tableClass() {
+
+  for (int i = 0; i < numRows; i++) {
+    delete[] myTable[i];
+  }
+
+  delete[] myTable;
+  delete[] DTarray;
+}
 int main() {
   int numRows, numCols;
   string fileName;
