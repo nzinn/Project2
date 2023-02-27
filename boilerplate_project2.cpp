@@ -143,6 +143,19 @@ void tableClass::display() {
   }
 }
 
+double tableClass::findMin(int colNumber) {
+
+  double min = myTable[0][colNumber];
+  for (int i = 1; i < numRows; i++) {
+
+    double toTest = stod(myTable[i][colNumber]); 
+    if (toTest < min) {
+      min = toTest;
+    }
+  }
+  
+}
+
 void tableClass::sortTable() {
 
   for (int i = 1; i < numRows; i++) {
@@ -217,9 +230,12 @@ string *tableClass::searchRecord(string str) {
   for (int i = 0; i < numRows; i++) {
 
     if (myTable[i][0].compare(str) == 0) {
+
       // Copy the row
       for (int j = 0; j < numCols; j++)
 	rowCopy[j] = myTable[i][j];
+
+      break;
     }
   }
   return rowCopy;
