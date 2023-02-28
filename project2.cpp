@@ -280,38 +280,43 @@ tableClass::~tableClass() {
 
 tableClass *tableClass::getRows(int rowTop, int rowBottom) {
 
-  string **rows = new string *[rowBottom - rowTop + 1];
 
-  for (int i = 0; i < rowBottom - rowTop + 1; i++) {
+  int rowLength = rowBottom - rowTop;
+  string **rows = new string *[rowLength];
+
+  for (int i = 0; i < rowLength; i++) {
     rows[i] = myTable[i + rowTop];
   }
 
-  return new tableClass(rows, DTarray, rowBottom - rowTop + 1, numCols);
+  return new tableClass(rows, DTarray, rowLength, numCols);
 }
 
 tableClass *tableClass::getColumns(int colLeft, int colRight) {
 
+
+
+  int colLength = colRight - colLeft;
   
   string **rows = new string*[numRows];
 
-  string *DTs = new string[colRight - colLeft + 1];
+  string *DTs = new string[colLength];
 
 
   
   for (int i = 0; i < numRows; i++) {
-    rows[i] = new string[colRight - colLeft + 1];
+    rows[i] = new string[colLength];
 
     // Get columns
-    for (int j = 0; j < colRight - colLeft + 1; j++) {
+    for (int j = 0; j < colLength; j++) {
       rows[i][j] = myTable[i][j + colLeft];
     }
   }
 
-  for (int i = 0; i < colRight - colLeft + 1; i++) {
+  for (int i = 0; i < colLength; i++) {
     DTs[i] = DTarray[i + colLeft];
   }
 
-  return new tableClass(rows, DTs, numRows, colRight - colLeft + 1);
+  return new tableClass(rows, DTs, numRows, colLength);
 }
 
 tableClass *tableClass::getRowsCols(int colLeft, int colRight, int rowTop, int rowBottom) {
