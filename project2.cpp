@@ -10,6 +10,25 @@ using namespace std;
 
 string *parseLine(string line, int numEntries);
 
+
+class TableException {
+public:
+  TableException(const string& message);
+  const string what() const noexcept;
+private:
+  string message;
+};
+
+TableException::TableException(const string& message) {
+  this->message = message;
+}
+
+const string TableException::what() const noexcept {
+  return message;
+}
+
+
+
 class tableClass {
 protected:
   string **myTable; // 2D string array to store all values (strings and numbers)
@@ -158,6 +177,20 @@ void tableClass::display() {
 
 double tableClass::findMin(int colNumber) {
 
+
+
+  if (colNumber < 0 || colNumber >= numCols) {
+    throw TableException("Column Number " + to_string(colNumber) + " out of bounds");
+  }
+  
+  // Datatype of the column
+  string datatype = DTarray[colNumber];
+
+  // If the column isn't a numeric datatype, throw an exception
+  if (datatype.compare("float") != 0 && datatype.compare("int") != 0 && datatype.compare("double") != 0) {
+    throw TableException("Not a numeric data type");
+  }
+
   double min = stod(myTable[0][colNumber]);
   for (int i = 1; i < numRows; i++) {
 
@@ -248,6 +281,8 @@ string *tableClass::searchRecord(string str) {
         rowCopy[j] = myTable[i][j];
 
       break;
+    } else if (i == numRows - 1) {
+      throw TableException("Record not found");
     }
   }
   return rowCopy;
@@ -256,15 +291,23 @@ string *tableClass::searchRecord(string str) {
 void tableClass::searchValue(string str) {
 
   cout << "Searching for " << str << endl;
+
+  // bool to see if we need to throw an exception
+  bool foundValue = false;
   
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
 
       // Print the row and columnt index if the current position contains str
       if (myTable[i][j].compare(str) == 0) {
+	foundValue = true;
         cout << "found in (" << i << ", " << j << ")" << endl;
       }
     }
+  }
+
+  if (!foundValue) {
+    throw TableException("Value not found");
   }
 }
 
@@ -327,6 +370,10 @@ tableClass *tableClass::getRowsCols(int colLeft, int colRight, int rowTop, int r
   return this->getColumns(colLeft, colRight)->getRows(rowTop, rowBottom);
 }
 
+
+
+
+
 int main() {
   int numRows, numCols;
   string fileName;
@@ -374,15 +421,19 @@ int main() {
 	cin >> name;
 
 	// Find the row
-	string *row = table->searchRecord(name);
 
-	cout << "Record found:" << endl;
+	try {
+	  string *row = table->searchRecord(name);
 
-	for (int i = 0; i < numCols; i++) {
-	  cout << row[i] << (i == numCols ? "" : " "); // Print space unless at the end
+	  cout << "Record found:" << endl;
+
+	  for (int i = 0; i < numCols; i++) {
+	    cout << row[i] << (i == numCols ? "" : " "); // Print space unless at the end
+	  }
+	  cout << endl;
+	} catch (const TableException& e) {
+	  cout << e.what() << endl;
 	}
-      
-	cout << endl;
 	break;
     }
 	// Find where the given element appears in the entire table
@@ -391,7 +442,13 @@ int main() {
       string element;
       cin >> element;
 
-      table->searchValue(element);
+      // Try to find the element, print exception if not found
+      try {
+	table->searchValue(element);
+      } catch (TableException& e) {
+	cout << e.what() << endl;
+      }
+      
       break;
     }
       // Display the table
@@ -406,7 +463,13 @@ int main() {
       int col;
       cin >> col;
 
-      cout << "Min of " << col << " is " << table->findMin(col) << endl;;
+      
+      try {
+	int result = table->findMin(col);
+	cout << "Min of " << col << " is " << result << endl;;
+      } catch (TableException& e) {
+	cout << e.what() << endl;
+      }
       break;
     }
 
