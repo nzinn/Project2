@@ -136,12 +136,13 @@ void tableClass::display() {
 
   // Print data types
 
-  // for (int i = 0; i < numCols; i++) {
+  for (int i = 0; i < numCols; i++) {
 
-  //   // Add a space between entries unless it's the last one
-  //   cout << DTarray[i] << (i == numCols ? "" : " ");
-  // }
+    // Add a space between entries unless it's the last one
+    cout << DTarray[i] << (i == numCols ? "" : " ");
+  }
 
+  cout << endl;
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
       // Add a space between entries unless it's the last one
@@ -279,7 +280,7 @@ tableClass::~tableClass() {
 
 tableClass *tableClass::getRows(int rowTop, int rowBottom) {
 
-  string **rows = new string *[numRows - rowBottom - rowTop + 1];
+  string **rows = new string *[rowBottom - rowTop + 1];
 
   for (int i = 0; i < rowBottom - rowTop + 1; i++) {
     rows[i] = myTable[i + rowTop];
@@ -315,13 +316,10 @@ tableClass *tableClass::getColumns(int colLeft, int colRight) {
 
 tableClass *tableClass::getRowsCols(int colLeft, int colRight, int rowTop, int rowBottom) {
 
-  // First, get only the rows
-  tableClass *temp = getRows(rowTop, rowBottom);
-  // Next, narrow to the columns that we want
-  tableClass *toReturn = temp->getColumns(colLeft, colRight);
+  // First, get only the columns
+  // Next, narrow to the rows that we want
 
-  delete temp;
-  return toReturn;
+  return this->getColumns(colLeft, colRight)->getRows(rowTop, rowBottom);
 }
 
 int main() {
@@ -357,9 +355,9 @@ int main() {
 
 
   char command;
+    cin >> command;
   
   while (cin.peek() != EOF) {
-    cin >> command;
 
     switch (command) {
       
@@ -389,6 +387,7 @@ int main() {
       cin >> element;
 
       table->searchValue(element);
+      break;
     }
       // Display the table
     case 'D':
@@ -402,7 +401,8 @@ int main() {
       int col;
       cin >> col;
 
-      table->findMin(col);
+      cout << "Min of " << col << " is " << table->findMin(col) << endl;;
+      break;
     }
 
       // Get table between columns
@@ -457,9 +457,12 @@ int main() {
       tableClass* temp = table->getRowsCols(fromCol, toCol, fromRow, toRow);
 
       temp->display();
-      
+      break;
     }
     }
+
+    // Read the next command
+    cin >> command;
     
   }
   delete[] DTs;
