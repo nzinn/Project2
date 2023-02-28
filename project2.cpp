@@ -179,6 +179,7 @@ double tableClass::findMin(int colNumber) {
 
 
 
+  // Throw an exception if colnumber is invalid
   if (colNumber < 0 || colNumber >= numCols) {
     throw TableException("Column Number " + to_string(colNumber) + " out of bounds");
   }
@@ -192,9 +193,12 @@ double tableClass::findMin(int colNumber) {
   }
 
   double min = stod(myTable[0][colNumber]);
+  
   for (int i = 1; i < numRows; i++) {
 
     double toTest = stod(myTable[i][colNumber]);
+
+    // Get new min
     if (toTest < min) {
       min = toTest;
     }
@@ -236,6 +240,7 @@ void tableClass::readCSV(string filename) {
 
     getline(fs, line, '\n');
 
+    // Parse the line and put the data in the correct row
     myTable[i] = parseLine(line, numCols);
   }
 
@@ -253,7 +258,7 @@ string *parseLine(string line, int numEntries) {
 
     string entry = "";
 
-    // Add each character to entry until you reach a comma
+    // Add each character to entry until you reach a comma or register character
     while (curIdx < line.length() && line.at(curIdx) != ',' &&
            line.at(curIdx) != '\r') {
 
@@ -321,12 +326,16 @@ tableClass::~tableClass() {
   delete[] DTarray;
 }
 
+
+// Get a portion of the rows of a table
 tableClass *tableClass::getRows(int rowTop, int rowBottom) {
 
 
+  // Allocate rows
   int rowLength = rowBottom - rowTop;
   string **rows = new string *[rowLength];
 
+  // Fill rows with only the rows we need
   for (int i = 0; i < rowLength; i++) {
     rows[i] = myTable[i + rowTop];
   }
@@ -334,12 +343,14 @@ tableClass *tableClass::getRows(int rowTop, int rowBottom) {
   return new tableClass(rows, DTarray, rowLength, numCols);
 }
 
+// Get a portion of the columns of a table
 tableClass *tableClass::getColumns(int colLeft, int colRight) {
 
 
 
   int colLength = colRight - colLeft;
-  
+
+  // Allocate rows
   string **rows = new string*[numRows];
 
   string *DTs = new string[colLength];
@@ -355,6 +366,7 @@ tableClass *tableClass::getColumns(int colLeft, int colRight) {
     }
   }
 
+  // Get only the column datatypes that we need
   for (int i = 0; i < colLength; i++) {
     DTs[i] = DTarray[i + colLeft];
   }
@@ -533,6 +545,8 @@ int main() {
     cin >> command;
     
   }
+
+  // Delete dynamically allocated data
   delete[] DTs;
   delete table;
   return 0;
