@@ -122,6 +122,8 @@ tableClass::tableClass(string **table, string *DTs, int rows, int cols) {
 }
 
 
+
+// Set the array of data types
 void tableClass::setDTarray(string *array) {
   for (int i = 0; i < numCols; i++) {
     DTarray[i] = array[i];
@@ -163,7 +165,6 @@ double tableClass::findMin(int colNumber) {
       min = toTest;
     }
   }
-
   return min;
 }
 
@@ -252,12 +253,15 @@ string *tableClass::searchRecord(string str) {
 }
 
 void tableClass::searchValue(string str) {
+
+  cout << "Searching for " << str << endl;
+  
   for (int i = 0; i < numRows; i++) {
     for (int j = 0; j < numCols; j++) {
 
       // Print the row and columnt index if the current position contains str
       if (myTable[i][j].compare(str) == 0) {
-        cout << str << " " << i << " " << j << endl;
+        cout << "found in (" << i << ", " << j << ")" << endl;
       }
     }
   }
@@ -358,20 +362,103 @@ int main() {
     cin >> command;
 
     switch (command) {
+      
       // Search for row with name 
-    case 'F':
+    case 'F': {
+
+      // Get the name
 	string name;
 	cin >> name;
 
+	// Find the row
 	string *row = table->searchRecord(name);
 
 	cout << "Record found:" << endl;
 
 	for (int i = 0; i < numCols; i++) {
-	  cout << row[i] << (i == numCols ? "" : " ");
+	  cout << row[i] << (i == numCols ? "" : " "); // Print space unless at the end
 	}
       
 	cout << endl;
+	break;
+    }
+	// Find where the given element appears in the entire table
+    case 'V': {
+
+      string element;
+      cin >> element;
+
+      table->searchValue(element);
+    }
+      // Display the table
+    case 'D':
+
+      table->display();
+      break;
+
+    case 'I': {
+
+      // Get the column number
+      int col;
+      cin >> col;
+
+      table->findMin(col);
+    }
+
+      // Get table between columns
+    case 'C': {
+
+      // Read the columns
+      int fromCol;
+      int toCol;
+
+      cin >> fromCol;
+      cin >> toCol;
+
+      // Get the new table and display it
+      tableClass* temp = table->getColumns(fromCol, toCol);
+      temp->display();
+
+      break;
+    }
+
+      // Get the table between rows
+    case 'R': {
+
+      // Get the rows
+      int fromRow;
+      int toRow;
+
+      cin >> fromRow;
+      cin >> toRow;
+
+      // Get the new table and display it
+      tableClass* temp = table->getRows(fromRow, toRow);
+      temp->display();
+
+      break;
+    }
+
+      // Get the table between rows and columns
+    case 'S': {
+
+      // Get rows and cols
+
+      int fromCol;
+      int toCol;
+      int fromRow;
+      int toRow;
+
+      cin >> fromCol;
+      cin >> toCol;
+      cin >> fromRow;
+      cin >> toRow;
+
+      tableClass* temp = table->getRowsCols(fromCol, toCol, fromRow, toRow);
+
+      temp->display();
+      
+    }
     }
     
   }
