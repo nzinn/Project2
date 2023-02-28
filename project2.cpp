@@ -189,7 +189,7 @@ double tableClass::findMin(int colNumber) {
 
   // If the column isn't a numeric datatype, throw an exception
   if (datatype.compare("float") != 0 && datatype.compare("int") != 0 && datatype.compare("double") != 0) {
-    throw TableException("Not a numeric data type");
+    throw TableException("Column not numeric");
   }
 
   double min = stod(myTable[0][colNumber]);
